@@ -1,0 +1,32 @@
+<div class="wrap">
+  <header>
+    <h1>produtos</h1>
+    <small>selecione seus itens</small>
+  </header>
+
+  <section>
+    <div class="card" *ngFor="let p of products">
+      <div class="info">
+        <strong>{{ p.name }}</strong>
+        <span class="price">{{ p.price | currency:'BRL':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="actions">
+        <button mat-mini-fab (click)="dec(p)"><mat-icon>remove</mat-icon></button>
+        <span class="qty">{{ qty(p) }}</span>
+        <button mat-mini-fab (click)="add(p)"><mat-icon>add</mat-icon></button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="sum">
+      <span>{{ totalItems() }} itens</span>
+      <strong>{{ totalPrice() | currency:'BRL':'symbol':'1.2-2' }}</strong>
+    </div>
+    <button mat-flat-button color="primary" class="cta"
+            [disabled]="totalItems()===0"
+            (click)="finish()">
+      finalizar
+    </button>
+  </footer>
+</div>
