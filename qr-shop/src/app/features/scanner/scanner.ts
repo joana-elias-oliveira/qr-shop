@@ -28,7 +28,6 @@ export class ScannerComponent implements OnInit {
   constructor(private session: SessionService, private router: Router) {}
 
   ngOnInit() {
-    // tenta pedir permissão assim que o componente carrega (alguns browsers permitem sem clique)
     queueMicrotask(async () => {
       try {
         if (!this.scannerEl) return;
@@ -38,7 +37,6 @@ export class ScannerComponent implements OnInit {
           this.scanning.set(true);
         }
       } catch {
-        // fica no fallback: botão "permitir/iniciar"
       }
     });
   }
@@ -70,13 +68,11 @@ export class ScannerComponent implements OnInit {
   }
 
   stop() {
-    this.showScanner.set(false);  // desmonta -> libera câmera
+    this.showScanner.set(false);
     this.scanning.set(false);
-    // se quiser manter o preview visível, pode setar true de novo depois
   }
 
   onScanSuccess(value: string) {
-    // salva a key e vai pra /products
     const key = value?.trim();
     if (key) {
       this.session.setKey(key);

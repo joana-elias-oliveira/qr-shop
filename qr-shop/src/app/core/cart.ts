@@ -8,7 +8,6 @@ export interface Product {
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  // [{ product, qty }]
   private _items = signal<{ product: Product; qty: number }[]>([]);
 
   items() { return this._items(); }

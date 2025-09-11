@@ -14,7 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./products.scss'],
 })
 export class ProductsComponent implements OnInit {
-  // precisa existir para o template
   products: Product[] = [
     { id: 'p1', name: 'Coca-Cola Lata 350ml', price: 5.00 },
     { id: 'p2', name: 'Água Mineral 500ml',   price: 3.00 },
@@ -24,7 +23,6 @@ export class ProductsComponent implements OnInit {
 
   key: string | null = null;
 
-  // cart como PUBLIC para o template acessar
   constructor(
     public cart: CartService,
     private session: SessionService,

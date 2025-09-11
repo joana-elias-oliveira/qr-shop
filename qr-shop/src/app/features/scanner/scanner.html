@@ -39,7 +39,6 @@
       <button mat-flat-button color="primary" (click)="ensurePermissionAndStart()">
         permitir e iniciar
       </button>
-      <!-- scanner invisível apenas para solicitar permissão -->
       <zxing-scanner #scannerEl [autostart]="false" style="display:none"></zxing-scanner>
     </div>
   </ng-template>
