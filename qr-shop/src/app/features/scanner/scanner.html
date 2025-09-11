@@ -1,8 +1,8 @@
-<div class="scan-wrap" (click)="autoStartOnTap()">
+<div class="scan-wrap">
   <ng-container *ngIf="embedded(); else scanner">
     <div class="msg">
       Este navegador dentro do app pode bloquear a câmera.
-      <a [href]="locationHref" target="_blank" rel="noopener">Abra no navegador</a>.
+      <a [href]="locationHref" target="_blank" rel="noopener">Abrir no navegador</a>.
     </div>
   </ng-container>
 
