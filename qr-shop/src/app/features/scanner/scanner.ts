@@ -33,6 +33,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
     this.embedded.set(isEmbeddedBrowser());
   }
 
+  // Inicia automaticamente ao primeiro toque em qualquer lugar da tela
   autoStartOnTap() {
     if (!this.started()) this.start();
   }
@@ -40,15 +41,18 @@ export class ScannerComponent implements OnInit, OnDestroy {
   async start() {
     try {
       console.log('[scanner] requesting getUserMedia...');
+      // 1) Pede permissão via gesto do usuário
       const tmp = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: { ideal: 'environment' },
+          facingMode: { ideal: 'environment' }, // tenta traseira
           width: { ideal: 1280 }, height: { ideal: 720 }
         },
         audio: false
       });
+      // fecha o stream temporário (ZXing abrirá o seu)
       tmp.getTracks().forEach(t => t.stop());
 
+      // 2) Lista câmeras (agora com labels)
       this.devices = await this.reader.listVideoInputDevices();
       console.log('[scanner] devices:', this.devices);
       const back = this.devices.find(d => /back|environment|traseira/i.test(d.label));
@@ -59,6 +63,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
         return;
       }
 
+      // 3) Inicia decodificação contínua
       this.started.set(true);
       console.log('[scanner] starting decodeFromVideoDevice on', this.currentDeviceId);
       this.reader.decodeFromVideoDevice(
