@@ -15,7 +15,7 @@ function isEmbeddedBrowser() {
   selector: 'app-scanner',
   imports: [CommonModule, MatButtonModule],
   templateUrl: './scanner.html',
-  styleUrl: './scanner.scss'
+  styleUrls: ['./scanner.scss']
 })
 export class ScannerComponent implements OnInit, OnDestroy {
   @ViewChild('preview', { static: true }) videoRef!: ElementRef<HTMLVideoElement>;
@@ -33,36 +33,54 @@ export class ScannerComponent implements OnInit, OnDestroy {
     this.embedded.set(isEmbeddedBrowser());
   }
 
+  autoStartOnTap() {
+    if (!this.started()) this.start();
+  }
+
   async start() {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' } }, audio: false
+      console.log('[scanner] requesting getUserMedia...');
+      const tmp = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1280 }, height: { ideal: 720 }
+        },
+        audio: false
       });
-      stream.getTracks().forEach(t => t.stop());
+      tmp.getTracks().forEach(t => t.stop());
 
       this.devices = await this.reader.listVideoInputDevices();
+      console.log('[scanner] devices:', this.devices);
       const back = this.devices.find(d => /back|environment|traseira/i.test(d.label));
       this.currentDeviceId = back?.deviceId ?? this.devices[0]?.deviceId ?? null;
 
+      if (!this.currentDeviceId) {
+        alert('Nenhuma câmera foi encontrada neste dispositivo.');
+        return;
+      }
+
       this.started.set(true);
+      console.log('[scanner] starting decodeFromVideoDevice on', this.currentDeviceId);
       this.reader.decodeFromVideoDevice(
         this.currentDeviceId,
         this.videoRef.nativeElement,
         (result?: Result) => {
           if (result) {
+            console.log('[scanner] QR result:', result.getText());
             this.stop();
             this.router.navigateByUrl('/products');
           }
         }
       );
     } catch (err: any) {
-      const msg = (err && err.name) ? err.name : String(err);
-      if (err?.name === 'NotAllowedError') {
-        alert('Permissão da câmera negada. Ative a câmera nas configurações do navegador.');
-      } else if (err?.name === 'NotFoundError') {
-        alert('Nenhuma câmera foi encontrada neste dispositivo.');
+      console.error('[scanner] getUserMedia error:', err);
+      const name = err?.name;
+      if (name === 'NotAllowedError' || name === 'SecurityError') {
+        alert('Permissão da câmera negada. Ative a câmera nas configurações do site (cadeado da barra de endereço).');
+      } else if (name === 'NotFoundError' || name === 'OverconstrainedError') {
+        alert('Nenhuma câmera disponível/compatível foi encontrada.');
       } else {
-        alert('Falha ao acessar a câmera: ' + msg);
+        alert('Falha ao acessar a câmera: ' + (name || err));
       }
     }
   }
@@ -72,7 +90,8 @@ export class ScannerComponent implements OnInit, OnDestroy {
     const idx = this.devices.findIndex(d => d.deviceId === this.currentDeviceId);
     const next = (idx + 1) % this.devices.length;
     this.currentDeviceId = this.devices[next].deviceId;
-    this.stop(); this.start();
+    this.stop();
+    this.start();
   }
 
   stop() {

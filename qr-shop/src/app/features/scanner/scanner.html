@@ -1,12 +1,26 @@
-<div class="scan-wrap">
-  <video #preview playsinline autoplay muted></video>
+<div class="scan-wrap" (click)="autoStartOnTap()">
+  <ng-container *ngIf="embedded(); else scanner">
+    <div class="msg">
+      Este navegador dentro do app pode bloquear a câmera.
+      <a [href]="locationHref" target="_blank" rel="noopener">Abra no navegador</a>.
+    </div>
+  </ng-container>
 
-  <div class="overlay">
-    <div class="box"></div>
-    <div class="hint">aponte para o QR</div>
-  </div>
+  <ng-template #scanner>
+    <video #preview playsinline autoplay muted></video>
 
-  <div class="footer">
-    <button mat-flat-button (click)="switchCam()">trocar câmera</button>
-  </div>
+    <div class="overlay">
+      <div class="box"></div>
+      <div class="hint">aponte para o QR</div>
+    </div>
+
+    <div class="footer">
+      <button mat-flat-button color="primary" *ngIf="!started()" (click)="start()">
+        iniciar scanner
+      </button>
+      <button mat-stroked-button *ngIf="started()" (click)="switchCam()">
+        trocar câmera
+      </button>
+    </div>
+  </ng-template>
 </div>
