@@ -1,0 +1,41 @@
+:host{display:block;background:#0E0F12;color:#fff;}
+
+.container{max-width:1100px;margin:0 auto;padding:0 16px;}
+.navbar{position:sticky;top:0;z-index:50;background:rgba(14,15,18,.7);backdrop-filter:blur(10px);border-bottom:1px solid #1f2937;}
+.bar{display:flex;align-items:center;justify-content:space-between;height:56px;}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;}
+.links{display:flex;gap:18px;align-items:center;}
+.links a{color:#e5e7eb;text-decoration:none;font-weight:500;}
+.links a:hover{color:#fff;}
+.links .whats{padding:8px 12px;border-radius:999px;background:#DC2626;color:#fff;}
+.links .whats:hover{background:#B91C1C;}
+
+.hero{min-height:70dvh;display:grid;place-items:center;background:
+  radial-gradient(1200px 600px at 80% 10%, rgba(220,38,38,.15), transparent 60%),
+  radial-gradient(1000px 500px at 10% 10%, rgba(22,163,74,.18), transparent 60%);}
+.wrap{max-width:760px;text-align:center;padding:60px 0;}
+.hero h1{font-size:clamp(28px,4vw,44px);margin:0 0 12px;font-weight:800;}
+.hero p{opacity:.9;margin:0 0 18px;}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+.section{padding:64px 0;}
+.section.alt{background:#111318;}
+.grid-2{display:grid;grid-template-columns:1fr;gap:24px;}
+@media (min-width:900px){.grid-2{grid-template-columns:1.1fr .9fr;}}
+
+.cards{display:grid;gap:18px;grid-template-columns:1fr;}
+@media (min-width:900px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{background:#15171c;border:1px solid #222;border-radius:14px;padding:18px;display:grid;gap:6px;}
+.card .price{color:#9FE3BD;font-weight:700;margin-top:6px;}
+
+.photo{min-height:260px;border-radius:14px;
+  background:linear-gradient(to bottom right, rgba(22,163,74,.25), rgba(0,0,0,.3)),
+  url('/assets/recanto-1.jpg') center/cover no-repeat;
+  border:1px solid #222;}
+.photo.food{background:linear-gradient(to bottom right, rgba(220,38,38,.2), rgba(0,0,0,.35)),
+url('/assets/food.jpg') center/cover no-repeat;}
+
+.footer{border-top:1px solid #1f2937;background:#0E0F12;}
+.fwrap{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px 0;flex-wrap:wrap;}
+.footer a{color:#9FE3BD;text-decoration:none;}
+.footer a:hover{color:#fff;}
