@@ -1,0 +1,4 @@
+{
+  "public": "dist/qr-shop/browser",
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+}
