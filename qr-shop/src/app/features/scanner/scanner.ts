@@ -41,31 +41,55 @@ export class ScannerComponent implements OnInit, OnDestroy {
   async start() {
     try {
       console.log('[scanner] requesting getUserMedia...');
-      // 1) Pede permissão via gesto do usuário
-      const tmp = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { ideal: 'environment' }, // tenta traseira
-          width: { ideal: 1280 }, height: { ideal: 720 }
-        },
+
+      // 1) Tente com facingMode "environment" (traseira)
+      const ok = await this.tryStartWith({
+        video: { facingMode: { ideal: 'environment' } },
         audio: false
       });
-      // fecha o stream temporário (ZXing abrirá o seu)
+      if (ok) return;
+
+      // 2) Fallback: qualquer câmera disponível
+      const ok2 = await this.tryStartWith({ video: true, audio: false });
+      if (ok2) return;
+
+      // 3) Último recurso: tente listar devices e escolher a primeira por deviceId
+      this.devices = await navigator.mediaDevices.enumerateDevices()
+        .then(d => d.filter(x => x.kind === 'videoinput'));
+      console.log('[scanner] enumerateDevices:', this.devices);
+
+      const first = this.devices[0]?.deviceId;
+      if (first) {
+        const ok3 = await this.tryStartWith({ video: { deviceId: { exact: first } }, audio: false });
+        if (ok3) return;
+      }
+
+      alert('Não foi possível iniciar a câmera (nenhuma combinação funcionou).');
+    } catch (err: any) {
+      this.handleMediaError(err);
+    }
+  }
+
+  private async tryStartWith(constraints: MediaStreamConstraints): Promise<boolean> {
+    try {
+      const tmp = await navigator.mediaDevices.getUserMedia(constraints);
+      // Dica iOS: garantir inline/mudo
+      this.videoRef.nativeElement.setAttribute('playsinline', '');
+      this.videoRef.nativeElement.muted = true;
+
+      // fecha stream temporário; ZXing abrirá o dele
       tmp.getTracks().forEach(t => t.stop());
 
-      // 2) Lista câmeras (agora com labels)
+      // listar devices após permissão (labels vêm preenchidos)
       this.devices = await this.reader.listVideoInputDevices();
-      console.log('[scanner] devices:', this.devices);
       const back = this.devices.find(d => /back|environment|traseira/i.test(d.label));
       this.currentDeviceId = back?.deviceId ?? this.devices[0]?.deviceId ?? null;
 
-      if (!this.currentDeviceId) {
-        alert('Nenhuma câmera foi encontrada neste dispositivo.');
-        return;
-      }
+      if (!this.currentDeviceId) return false;
 
-      // 3) Inicia decodificação contínua
       this.started.set(true);
-      console.log('[scanner] starting decodeFromVideoDevice on', this.currentDeviceId);
+      console.log('[scanner] starting decodeFromVideoDevice with', this.currentDeviceId, constraints);
+
       this.reader.decodeFromVideoDevice(
         this.currentDeviceId,
         this.videoRef.nativeElement,
@@ -77,18 +101,31 @@ export class ScannerComponent implements OnInit, OnDestroy {
           }
         }
       );
-    } catch (err: any) {
-      console.error('[scanner] getUserMedia error:', err);
-      const name = err?.name;
-      if (name === 'NotAllowedError' || name === 'SecurityError') {
-        alert('Permissão da câmera negada. Ative a câmera nas configurações do site (cadeado da barra de endereço).');
-      } else if (name === 'NotFoundError' || name === 'OverconstrainedError') {
-        alert('Nenhuma câmera disponível/compatível foi encontrada.');
-      } else {
-        alert('Falha ao acessar a câmera: ' + (name || err));
+      return true;
+    } catch (e: any) {
+      console.warn('[scanner] tryStartWith failed:', constraints, e?.name || e);
+      if (e?.name === 'NotReadableError') {
+        // geralmente: câmera em uso / driver travado / permissão do sistema
+        // não derruba ainda — deixa próxima estratégia tentar
       }
+      return false;
     }
   }
+
+  private handleMediaError(err: any) {
+    console.error('[scanner] getUserMedia error:', err);
+    const name = err?.name;
+    if (name === 'NotAllowedError' || name === 'SecurityError') {
+      alert('Permissão negada. Libere a câmera no cadeado da URL / ajustes do navegador.');
+    } else if (name === 'NotReadableError') {
+      alert('A câmera parece estar em uso por outro app/aba ou bloqueada pelo sistema. Feche apps que usam câmera e verifique as permissões do sistema.');
+    } else if (name === 'NotFoundError' || name === 'OverconstrainedError') {
+      alert('Nenhuma câmera disponível/compatível foi encontrada.');
+    } else {
+      alert('Falha ao acessar a câmera: ' + (name || err));
+    }
+  }
+
 
   switchCam() {
     if (!this.devices.length) return;
