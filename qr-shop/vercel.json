@@ -1,4 +1,7 @@
 {
-  "public": "dist/qr-shop/browser",
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "buildCommand": "ng build --configuration=production",
+  "outputDirectory": "dist/qr-shop/browser",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
 }
