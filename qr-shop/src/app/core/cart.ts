@@ -8,28 +8,36 @@ export interface Product {
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  items = signal<{ product: Product; qty: number }[]>([]);
+  // [{ product, qty }]
+  private _items = signal<{ product: Product; qty: number }[]>([]);
+
+  items() { return this._items(); }
 
   add(p: Product) {
-    const arr = this.items();
+    const arr = [...this._items()];
     const i = arr.findIndex(x => x.product.id === p.id);
     if (i >= 0) arr[i] = { ...arr[i], qty: arr[i].qty + 1 };
     else arr.push({ product: p, qty: 1 });
-    this.items.set([...arr]);
+    this._items.set(arr);
   }
 
-  remove(p: Product) {
-    const arr = this.items();
+  decrement(p: Product) {
+    const arr = [...this._items()];
     const i = arr.findIndex(x => x.product.id === p.id);
     if (i >= 0) {
       const n = arr[i].qty - 1;
-      n <= 0 ? arr.splice(i, 1) : arr[i] = { ...arr[i], qty: n };
-      this.items.set([...arr]);
+      if (n <= 0) arr.splice(i, 1); else arr[i] = { ...arr[i], qty: n };
+      this._items.set(arr);
     }
   }
 
-  clear() { this.items.set([]); }
+  getQuantity(p: Product) {
+    return this._items().find(i => i.product.id === p.id)?.qty ?? 0;
+  }
 
-  totalItems() { return this.items().reduce((s, it) => s + it.qty, 0); }
-  totalPrice() { return this.items().reduce((s, it) => s + it.qty * it.product.price, 0); }
+  totalPrice() {
+    return this._items().reduce((s, it) => s + it.qty * it.product.price, 0);
+  }
+
+  clear() { this._items.set([]); }
 }

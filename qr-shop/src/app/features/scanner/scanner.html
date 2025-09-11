@@ -1,26 +1,46 @@
 <div class="scan-wrap">
-  <ng-container *ngIf="embedded(); else scanner">
-    <div class="msg">
-      Este navegador dentro do app pode bloquear a câmera.
-      <a [href]="locationHref" target="_blank" rel="noopener">Abrir no navegador</a>.
-    </div>
+  <ng-container *ngIf="hasPermission(); else ask">
+    <ng-container *ngIf="showScanner(); else controls">
+      <zxing-scanner
+        #scannerEl
+        [device]="currentDevice"
+        [formats]="formats"
+        [tryHarder]="true"
+        [autostart]="true"
+        (scanSuccess)="onScanSuccess($event)"
+        (camerasFound)="onCamerasFound($event)"
+        (permissionResponse)="onPermission($event)">
+      </zxing-scanner>
+
+      <div class="overlay">
+        <div class="box"></div>
+        <div class="hint">aponte para o QR</div>
+      </div>
+
+      <div class="footer">
+        <button mat-stroked-button (click)="switchCam()">trocar câmera</button>
+        <button mat-button (click)="stop()">parar</button>
+      </div>
+    </ng-container>
+
+    <ng-template #controls>
+      <div class="msg">
+        <p>Toque para iniciar o scanner.</p>
+        <button mat-flat-button color="primary" (click)="ensurePermissionAndStart()">
+          iniciar scanner
+        </button>
+      </div>
+    </ng-template>
   </ng-container>
 
-  <ng-template #scanner>
-    <video #preview playsinline autoplay muted></video>
-
-    <div class="overlay">
-      <div class="box"></div>
-      <div class="hint">aponte para o QR</div>
-    </div>
-
-    <div class="footer">
-      <button mat-flat-button color="primary" *ngIf="!started()" (click)="start()">
-        iniciar scanner
+  <ng-template #ask>
+    <div class="msg">
+      <p>Precisamos da sua autorização para usar a câmera.</p>
+      <button mat-flat-button color="primary" (click)="ensurePermissionAndStart()">
+        permitir e iniciar
       </button>
-      <button mat-stroked-button *ngIf="started()" (click)="switchCam()">
-        trocar câmera
-      </button>
+      <!-- scanner invisível apenas para solicitar permissão -->
+      <zxing-scanner #scannerEl [autostart]="false" style="display:none"></zxing-scanner>
     </div>
   </ng-template>
 </div>
