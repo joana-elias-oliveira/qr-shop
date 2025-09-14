@@ -1,8 +1,9 @@
-:host { display:block; height:100dvh; background:#000; }
-.scan-wrap { position:relative; height:100%; }
-zxing-scanner, video { width:100%; height:100%; object-fit:cover; background:#000; }
-.overlay { pointer-events:none; position:absolute; inset:0; display:grid; place-items:center; }
-.box { width:min(75vw,360px); aspect-ratio:1; border:2px solid #fff; border-radius:10px; box-shadow:0 0 0 9999px #0007; }
-.hint { position:absolute; bottom:90px; color:#fff; opacity:.9; }
-.footer { position:absolute; bottom:20px; left:0; right:0; display:flex; justify-content:center; gap:12px; }
-.msg { color:#fff; display:grid; place-items:center; height:100%; padding:24px; text-align:center; gap:12px; }
+/* src/app/features/scanner/scanner.scss */
+:host { display: block; height: 100dvh; background: #000; }
+.scan-wrap { position: relative; height: 100%; }
+zxing-scanner, video { width: 100%; height: 100%; object-fit: cover; background: #000; }
+.overlay { pointer-events: none; position: absolute; inset: 0; display: grid; place-items: center; }
+.box { width: min(75vw, 360px); aspect-ratio: 1; border: 2px solid #fff; border-radius: 10px; box-shadow: 0 0 0 9999px #0007; }
+.hint { position: absolute; bottom: 90px; color: #fff; opacity: .9; }
+.footer { position: absolute; bottom: 20px; left: 0; right: 0; display: flex; justify-content: center; gap: 12px; }
+.msg { color: #fff; display: grid; place-items: center; height: 100%; padding: 24px; text-align: center; gap: 12px; }
