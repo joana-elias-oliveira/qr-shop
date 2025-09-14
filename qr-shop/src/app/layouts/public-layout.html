@@ -1,0 +1,22 @@
+<header class="topbar">
+  <div class="brand">Recanto MV</div>
+</header>
+
+<main class="container">
+  <router-outlet></router-outlet>
+</main>
+
+<nav class="bottom-nav">
+  <a routerLink="/" routerLinkActive="active">
+    <span class="label">Início</span>
+  </a>
+  <a [routerLink]="['/balance', lastCardId || '']" [class.disabled]="!lastCardId">
+    <span class="label">Saldo</span>
+  </a>
+  <a [routerLink]="['/transactions', lastCardId || '']" [class.disabled]="!lastCardId">
+    <span class="label">Transações</span>
+  </a>
+  <a routerLink="/restricted">
+    <span class="label">Área Restrita</span>
+  </a>
+</nav>

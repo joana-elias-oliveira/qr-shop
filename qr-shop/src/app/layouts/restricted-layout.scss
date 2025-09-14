@@ -1,0 +1,22 @@
+.restricted { display:flex; min-height:100dvh; }
+.sidebar { width:240px; background:#1A202C; color:#E2E8F0; padding:16px; display:none; flex-direction:column; gap:8px; }
+.sidebar .brand { font-weight:600; margin-bottom:12px; }
+.sidebar a { color:#E2E8F0; text-decoration:none; padding:10px 12px; border-radius:8px; }
+.sidebar a.active, .sidebar a:hover { background:var(--brand); color:#fff; }
+.content { flex:1; padding:16px; }
+.bottom-nav { position:fixed; left:0; right:0; bottom:0; height:64px; background:#fff; border-top:1px solid #e5e7eb; display:flex; justify-content:space-around; align-items:center; z-index:10; }
+.bottom-nav a { text-decoration:none; color:#1A202C; display:flex; flex-direction:column; align-items:center; font-size:12px; }
+.bottom-nav .disabled { opacity:.4; pointer-events:none; }
+
+@media (min-width: 992px) {
+  .sidebar { display:flex; }
+  .bottom-nav { display:none; }
+  .content { padding:24px 40px; }
+}
+
+.bottom-nav { z-index: 100; }
+.restricted .content { padding-bottom: 96px; }
+@media (min-width: 992px){ .restricted .content { padding-bottom: 0; } }
+
+.toolbar{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.toolbar .link{font-weight:600}

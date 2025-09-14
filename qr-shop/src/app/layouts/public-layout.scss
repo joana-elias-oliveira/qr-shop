@@ -1,0 +1,16 @@
+.topbar { height:56px; display:flex; align-items:center; padding:0 16px; background:var(--brand); color:#fff; font-weight:600; }
+.container { padding:16px; padding-bottom:96px; }
+.bottom-nav {
+  position:fixed; left:0; right:0; bottom:0; height:64px; background:#fff; border-top:1px solid #e5e7eb;
+  display:flex; justify-content:space-around; align-items:center; z-index:10;
+  a { text-decoration:none; color:#1A202C; display:flex; flex-direction:column; align-items:center; font-size:12px; }
+  .active { color:var(--brand); }
+  .disabled { opacity:.4; pointer-events:none; }
+}
+@media (min-width: 992px) {
+  .bottom-nav { display:none; }
+  .container { padding:24px 32px; max-width:1024px; margin:0 auto; }
+}
+
+main.container{ padding-bottom: 96px; }
+@media (min-width: 992px){ main.container{ padding-bottom:0; } }

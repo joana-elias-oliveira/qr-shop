@@ -1,0 +1,25 @@
+<div class="restricted">
+  <aside class="sidebar">
+    <div class="brand">Admin • RMV</div>
+    <a routerLink="/restricted/login" routerLinkActive="active">Autenticar</a>
+    <a [routerLink]="['/restricted/scan']">Scanner</a>
+    <a [routerLink]="['/restricted/add-balance', lastCardId]" [class.disabled]="!lastCardId">Adicionar Saldo</a>
+    <a [routerLink]="['/restricted/checkout', lastCardId]" [class.disabled]="!lastCardId">Checkout</a>
+    <a [routerLink]="['/restricted/assign', lastCardId]" [class.disabled]="!lastCardId">Assign</a>
+  </aside>
+  <main class="content">
+    <div class="toolbar">
+      <a class="link" routerLink="/">← Voltar ao público</a>
+    </div>
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<nav class="bottom-nav">
+  <a routerLink="/"><span class="label">Público</span></a>
+  <a routerLink="/restricted/login"><span class="label">Login</span></a>
+  <a [routerLink]="['/restricted/scan']"><span class="label">Scanner</span></a>
+  <a [routerLink]="['/restricted/add-balance', lastCardId]" [class.disabled]="!lastCardId"><span class="label">Saldo</span></a>
+  <a [routerLink]="['/restricted/checkout', lastCardId]" [class.disabled]="!lastCardId"><span class="label">Checkout</span></a>
+  <a [routerLink]="['/restricted/assign', lastCardId]" [class.disabled]="!lastCardId"><span class="label">Assign</span></a>
+</nav>
