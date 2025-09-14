@@ -1,6 +1,0 @@
-.nav { position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
-.brand { display:flex; align-items:center; gap:8px; text-decoration:none; color:inherit; font-weight:700; }
-.spacer { flex:1 1 auto; }
-.links.desktop { display:flex; gap:6px; }
-.mobile { display:none; }
-@media (max-width: 900px){ .links.desktop{display:none;} .mobile{display:block;} }
