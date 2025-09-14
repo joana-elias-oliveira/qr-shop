@@ -1,0 +1,29 @@
+<mat-card class="card">
+  <div class="head">
+    <h2>Adicionar saldo</h2>
+    <div class="meta" *ngIf="key; else noKey">
+      <div><strong>Chave:</strong> <span class="mono">{{ key }}</span></div>
+      <div><strong>Saldo atual:</strong> R$ {{ balance() | number:'1.2-2' }}</div>
+    </div>
+  </div>
+
+  <ng-template #noKey>
+    <div class="warn">
+      Nenhuma chave ativa. Escaneie um QR na área pública.
+      <button mat-stroked-button color="primary" (click)="goScan()">Escanear QR</button>
+    </div>
+  </ng-template>
+
+  <form class="form" (ngSubmit)="add()" *ngIf="key">
+    <mat-form-field appearance="outline">
+      <mat-label>Valor a adicionar (R$)</mat-label>
+      <input matInput type="number" step="0.01" min="0.01" [formControl]="amount" />
+      <mat-error *ngIf="amount.hasError('required')">Informe um valor</mat-error>
+      <mat-error *ngIf="amount.hasError('min')">Mínimo R$ 0,01</mat-error>
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" type="submit" [disabled]="busy() || amount.invalid">
+      {{ busy() ? 'Adicionando…' : 'Adicionar' }}
+    </button>
+  </form>
+</mat-card>

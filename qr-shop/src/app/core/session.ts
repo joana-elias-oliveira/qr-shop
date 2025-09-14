@@ -1,21 +1,26 @@
 import { Injectable, signal } from '@angular/core';
 
+const KEY = 'qr-shop-key';
+
 @Injectable({ providedIn: 'root' })
 export class SessionService {
-  shopKey = signal<string | null>(null);
+  private _shopKey = signal<string | null>(null);
+  shopKey = this._shopKey.asReadonly();
 
-  setKey(k: string) {
-    this.shopKey.set(k);
-    sessionStorage.setItem('shopKey', k);
+  setShopKey(key: string) {
+    this._shopKey.set(key);
+    localStorage.setItem(KEY, key);
+  }
+  // alias pro seu código atual:
+  setKey(key: string) { this.setShopKey(key); }
+
+  clear() {
+    this._shopKey.set(null);
+    localStorage.removeItem(KEY);
   }
 
   restore() {
-    const k = sessionStorage.getItem('shopKey');
-    if (k) this.shopKey.set(k);
-  }
-
-  clear() {
-    this.shopKey.set(null);
-    sessionStorage.removeItem('shopKey');
+    const k = localStorage.getItem(KEY);
+    if (k) this._shopKey.set(k);
   }
 }

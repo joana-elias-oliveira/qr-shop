@@ -1,0 +1,12 @@
+<div class="wrap">
+  <h2>Saldo</h2>
+  <ng-container *ngIf="key; else noKey">
+    <p><strong>Chave:</strong> {{ key }}</p>
+    <p><strong>Saldo:</strong> R$ {{ balance | number:'1.2-2' }}</p>
+    <button mat-stroked-button color="primary" (click)="goScan()">Ler outro QR</button>
+  </ng-container>
+  <ng-template #noKey>
+    <p>Nenhuma chave encontrada.</p>
+    <button mat-flat-button color="primary" (click)="goScan()">Escanear QR</button>
+  </ng-template>
+</div>

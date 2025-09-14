@@ -1,0 +1,24 @@
+<mat-toolbar color="primary" class="nav">
+  <a class="brand" routerLink="/">
+    <span class="logo">🌿</span>
+    <span>Recanto Montanha Verde</span>
+  </a>
+  <span class="spacer"></span>
+
+  <nav class="links desktop">
+    <a mat-button routerLink="/" fragment="sobre">Sobre</a>
+    <a mat-button routerLink="/" fragment="acomodacoes">Acomodações</a>
+    <a mat-button routerLink="/" fragment="gastronomia">Gastronomia</a>
+    <a mat-stroked-button color="accent" routerLink="/admin/login">Área restrita</a>
+  </nav>
+
+  <button mat-icon-button class="mobile" [matMenuTriggerFor]="m">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #m="matMenu">
+    <button mat-menu-item [routerLink]="['/']" fragment="sobre">Sobre</button>
+    <button mat-menu-item [routerLink]="['/']" fragment="acomodacoes">Acomodações</button>
+    <button mat-menu-item [routerLink]="['/']" fragment="gastronomia">Gastronomia</button>
+    <button mat-menu-item routerLink="/admin/login">Área restrita</button>
+  </mat-menu>
+</mat-toolbar>

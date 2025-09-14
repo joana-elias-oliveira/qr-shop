@@ -1,0 +1,11 @@
+.nav { position: sticky; top: 0; z-index: 120; }
+.brand { display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:700; }
+.spacer { flex:1 1 auto; }
+.links.desktop { display:flex; align-items:center; gap:6px; }
+.links .active { background: rgba(255,255,255,.1); border-radius: 8px; }
+.mobile { display:none; }
+
+@media (max-width: 900px) {
+  .links.desktop { display:none; }
+  .mobile { display:block; }
+}

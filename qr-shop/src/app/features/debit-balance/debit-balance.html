@@ -1,0 +1,17 @@
+<div class="wrap">
+  <h2>Debitar Saldo</h2>
+
+  <div *ngIf="key; else warn">
+    <p>Chave: {{ key }}</p>
+    <p>Saldo atual: R$ {{ wallet.getBalance(key) | number:'1.2-2' }}</p>
+
+    <input [(ngModel)]="amount" type="number" min="0" step="0.01" placeholder="Valor" />
+    <button mat-flat-button color="warn" (click)="debit()">Debitar</button>
+
+    <p *ngIf="error" class="err">Valor maior que o saldo.</p>
+  </div>
+
+  <ng-template #warn>
+    <p>Nenhuma chave ativa. Leia um QR na tela pública.</p>
+  </ng-template>
+</div>

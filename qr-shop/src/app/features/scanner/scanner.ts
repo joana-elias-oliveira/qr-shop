@@ -77,7 +77,8 @@ export class ScannerComponent implements OnInit {
     if (key) {
       this.session.setKey(key);
       this.stop();
-      this.router.navigateByUrl('/products');
+      this.router.navigateByUrl('/saldo'); // público: mostrar saldo
     }
   }
+
 }

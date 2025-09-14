@@ -1,0 +1,28 @@
+<mat-toolbar class="nav" color="primary">
+  <div class="brand" routerLink="/admin">
+    <mat-icon>admin_panel_settings</mat-icon>
+    <span>Admin</span>
+  </div>
+  <span class="spacer"></span>
+
+  <!-- desktop -->
+  <nav class="links desktop">
+    <a mat-button routerLink="/admin/produtos" routerLinkActive="active">Produtos</a>
+    <a mat-button routerLink="/admin/saldo/adicionar" routerLinkActive="active">Adicionar saldo</a>
+    <a mat-button routerLink="/admin/saldo/debitar" routerLinkActive="active">Debitar saldo</a>
+    <button mat-stroked-button color="accent" (click)="logout()">
+      <mat-icon style="margin-right:6px">logout</mat-icon> Sair
+    </button>
+  </nav>
+
+  <!-- mobile -->
+  <button mat-icon-button class="mobile" [matMenuTriggerFor]="amenu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #amenu="matMenu">
+    <button mat-menu-item routerLink="/admin/produtos">Produtos</button>
+    <button mat-menu-item routerLink="/admin/saldo/adicionar">Adicionar saldo</button>
+    <button mat-menu-item routerLink="/admin/saldo/debitar">Debitar saldo</button>
+    <button mat-menu-item (click)="logout()">Sair</button>
+  </mat-menu>
+</mat-toolbar>
