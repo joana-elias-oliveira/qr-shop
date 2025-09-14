@@ -1,12 +1,22 @@
-<div class="wrap">
-  <h2>Saldo</h2>
-  <ng-container *ngIf="key; else noKey">
-    <p><strong>Chave:</strong> {{ key }}</p>
+<div class="pb">
+  <h2>Consultar saldo</h2>
+
+  <div class="row">
+    <input [(ngModel)]="cardId" placeholder="Card ID" />
+    <button mat-flat-button color="primary" (click)="consult()" [disabled]="loading || !cardId">Consultar</button>
+    <button mat-stroked-button (click)="scan()">Ler QR</button>
+  </div>
+
+  <p *ngIf="loading">Carregando…</p>
+  <p *ngIf="error" class="err">{{ error }}</p>
+
+  <div *ngIf="!loading && !error && cardId">
     <p><strong>Saldo:</strong> R$ {{ balance | number:'1.2-2' }}</p>
-    <button mat-stroked-button color="primary" (click)="goScan()">Ler outro QR</button>
-  </ng-container>
-  <ng-template #noKey>
-    <p>Nenhuma chave encontrada.</p>
-    <button mat-flat-button color="primary" (click)="goScan()">Escanear QR</button>
-  </ng-template>
+    <h3>Últimas transações</h3>
+    <ul>
+      <li *ngFor="let t of transactions">
+        {{ t.date || t.createdAt | date:'short' }} — {{ t.type }} — R$ {{ t.amount | number:'1.2-2' }}
+      </li>
+    </ul>
+  </div>
 </div>

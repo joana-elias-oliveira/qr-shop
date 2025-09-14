@@ -1,7 +1,19 @@
 {
-  "buildCommand": "ng build --configuration=production",
-  "outputDirectory": "dist/qr-shop/browser",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Permissions-Policy", "value": "camera=(self)" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.montanhaverde.com.br" }],
+      "destination": "https://montanhaverde.com.br/$1",
+      "permanent": true
+    }
   ]
 }

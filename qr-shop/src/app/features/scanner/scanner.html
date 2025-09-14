@@ -1,45 +1,30 @@
-<div class="scan-wrap">
-  <ng-container *ngIf="hasPermission(); else ask">
-    <ng-container *ngIf="showScanner(); else controls">
-      <zxing-scanner
-        #scannerEl
-        [device]="currentDevice"
-        [formats]="formats"
-        [tryHarder]="true"
-        [autostart]="true"
-        (scanSuccess)="onScanSuccess($event)"
-        (camerasFound)="onCamerasFound($event)"
-        (permissionResponse)="onPermission($event)">
-      </zxing-scanner>
+<div class="scanner">
+  <!-- Aviso de HTTPS -->
+  <div *ngIf="insecure()" class="err">
+    Este site precisa estar em <strong>HTTPS</strong> (ou <code>localhost</code>) para usar a câmera.
+  </div>
 
-      <div class="overlay">
-        <div class="box"></div>
-        <div class="hint">aponte para o QR</div>
-      </div>
-
-      <div class="footer">
-        <button mat-stroked-button (click)="switchCam()">trocar câmera</button>
-        <button mat-button (click)="stop()">parar</button>
-      </div>
-    </ng-container>
-
-    <ng-template #controls>
-      <div class="msg">
-        <p>Toque para iniciar o scanner.</p>
-        <button mat-flat-button color="primary" (click)="ensurePermissionAndStart()">
-          iniciar scanner
-        </button>
-      </div>
-    </ng-template>
-  </ng-container>
-
-  <ng-template #ask>
-    <div class="msg">
-      <p>Precisamos da sua autorização para usar a câmera.</p>
-      <button mat-flat-button color="primary" (click)="ensurePermissionAndStart()">
-        permitir e iniciar
-      </button>
-      <zxing-scanner #scannerEl [autostart]="false" style="display:none"></zxing-scanner>
+  <!-- Aviso de navegador embutido -->
+  <div *ngIf="inApp()" class="warn">
+    O navegador do app (WhatsApp/Instagram) pode bloquear a câmera.
+    <div class="row" style="margin-top:8px; gap:8px;">
+      <a mat-stroked-button color="primary"
+         [href]="loc.origin + loc.pathname"
+         target="_blank" rel="noopener">
+        Abrir no navegador
+      </a>
+      <button mat-stroked-button color="accent" (click)="forceStart()">Tentar mesmo assim</button>
     </div>
+  </div>
+
+  <video #preview playsinline muted style="width:100%;max-width:480px;border-radius:8px;"></video>
+
+  <div class="actions" *ngIf="!started(); else running" style="margin-top:12px;">
+    <button mat-flat-button color="primary" (click)="start()">Ligar câmera</button>
+  </div>
+
+  <ng-template #running>
+    <p style="margin:8px 0;">Aponte para o QR</p>
+    <button mat-stroked-button color="warn" (click)="stop()">Parar</button>
   </ng-template>
 </div>

@@ -1,4 +1,4 @@
-import { Component, computed, signal, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -7,16 +7,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import {WalletService} from '../../core/wallet';
 import {SessionService} from '../../core/session';
+import {ApiService} from '../../core/api-service';
 
 @Component({
   standalone: true,
   selector: 'app-add-balance',
   imports: [
     CommonModule, DecimalPipe,
-    FormsModule, ReactiveFormsModule,
-    RouterModule,
+    FormsModule, ReactiveFormsModule, RouterModule,
     MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSnackBarModule
   ],
   templateUrl: './add-balance.html',
@@ -24,30 +23,36 @@ import {SessionService} from '../../core/session';
 })
 export class AddBalanceComponent implements OnInit {
   key: string | null = null;
-  balance = computed(() => this.key ? this.wallet.getBalance(this.key) : 0);
+  balance = signal(0);
   amount = new FormControl<number | null>(null, { validators: [Validators.required, Validators.min(0.01)] });
   busy = signal(false);
 
   constructor(
     private session: SessionService,
-    private wallet: WalletService,
+    private api: ApiService,
     private snack: MatSnackBar,
     private router: Router
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.session.restore();
     this.key = this.session.shopKey();
+    if (this.key) {
+      try { this.balance.set((await this.api.getBalance(this.key)).balance ?? 0); }
+      catch { this.snack.open('Falha ao carregar saldo.', 'OK', { duration: 2000 }); }
+    }
   }
 
-  add() {
-    if (!this.key) { this.snack.open('Nenhuma chave ativa. Leia um QR.', 'OK', { duration: 2500 }); return; }
+  async add() {
+    if (!this.key) { this.snack.open('Nenhuma chave ativa.', 'OK', { duration: 1500 }); return; }
     if (this.amount.invalid || !this.amount.value) { this.amount.markAsTouched(); return; }
     this.busy.set(true);
-    this.wallet.add(this.key, Number(this.amount.value));
-    this.amount.reset(null);
-    this.busy.set(false);
-    this.snack.open('Saldo adicionado!', 'OK', { duration: 2000 });
+    try {
+      const res = await this.api.addBalance(this.key, Number(this.amount.value));
+      this.balance.set(res.newBalance ?? this.balance() + Number(this.amount.value));
+      this.amount.reset(null);
+      this.snack.open('Saldo adicionado!', 'OK', { duration: 1500 });
+    } finally { this.busy.set(false); }
   }
 
   goScan(){ this.router.navigateByUrl('/scan'); }
